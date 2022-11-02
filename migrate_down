@@ -1,0 +1,79 @@
+# Use this script when you need to downgrade migrations that exist in current but don't
+# in the branch that you're checking out to. For example MGM configuration -> master
+
+# Usage -> ./checkout.sh <target-branch-name>
+
+MIGRATION_PATH="migrations"
+
+if [ ! -d "$MIGRATION_PATH" ]; then
+  echo '*** GIT-MIGRATION-HOOK: directory for migrations does not exist.'
+  echo '***                     The path is configurable and is currently gitRoot/'$MIGRATION_PATH
+  exit -1
+fi
+
+current_branch=$(git branch | grep "*" | sed "s/\* //")
+
+target_branch=$1
+
+echo
+
+if [ -z "$1" ]
+  then
+    echo "No target branch provided"
+    echo "Available branches are: "
+    echo "$(git branch)"
+    echo
+    exit 1
+fi
+
+if ! git show-ref --quiet "refs/heads/${1}"; then
+    echo "Branch named: '${1}' does not exist"
+    echo "Available branches are: "
+    echo "$(git branch)"
+    echo
+    exit 1
+fi
+
+migrations="$(git diff --name-only --diff-filter=A $current_branch..$target_branch migrations)"
+
+if [ -z "$migrations" ]
+then
+    echo "Migrations are up to date with target branch"
+    echo
+    exit
+fi
+
+
+echo "Files to be migrated:"
+echo "$migrations"
+echo
+
+while true; do
+    read -p "Do you want to run down listed migrations? (y/n) " yn
+    echo "$yn"
+    case $yn in
+	[nN] ) echo "(n) Aborting...";
+                exit;;
+        [yY]|"" ) echo "(y) Migrating down...";
+            git diff --name-only --diff-filter=A $current_branch..$target_branch migrations | sort -r | while read migration; do
+                [[ $migration =~ (Version[0-9]+) ]]
+
+                migrationVersion=${BASH_REMATCH[0]}
+
+                echo "Migrating down: $migrationVersion"
+
+                bin/console d:m:e "DoctrineMigrations\\$migrationVersion" --down --no-interaction
+            done
+	    echo
+            echo Migrated down successfully
+            echo
+	    break;;
+        * ) echo invalid response;;
+    esac
+done
+
+if [[ "$2" == "-c" ]]
+then
+    git checkout $target_branch
+fi
+echo
