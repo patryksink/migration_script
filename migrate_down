@@ -1,6 +1,6 @@
 
-# COMMAND -> provide your own command if project requires other Doctrine syntacs ($migration_version must be used as verision indicator)
-# MIGRATION_PATH -> describes root to the migration folder from current directory
+# COMMAND -> provide your own command if project requires other Doctrine syntax ($migration_version must be used as verision indicator)
+# MIGRATION_PATH -> describes path to the migration folder from current directory
 # -c -> Add as second argument to checkout to the branch
 
 COMMAND='bin/console d:m:e "DoctrineMigrations\\$migration_version" --down --no-interaction'
