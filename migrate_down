@@ -1,4 +1,5 @@
 
+COMMAND='bin/console d:m:e "DoctrineMigrations\\$migration_version" --down --no-interaction'
 MIGRATION_PATH="migrations"
 
 function line_exit {
@@ -67,11 +68,11 @@ while true; do
             git diff --name-only --diff-filter=D $current_branch..$target_branch migrations | sort -r | while read migration; do
                 [[ $migration =~ (Version[0-9]+) ]]
 
-                migrationVersion=${BASH_REMATCH[0]}
+                migration_version=${BASH_REMATCH[0]}
 
-                echo "Migrating down: $migrationVersion"
-
-                bin/console d:m:e "DoctrineMigrations\\$migrationVersion" --down --no-interaction
+                echo "Migrating down: $migration_version"
+		
+		eval "$COMMAND"
             done
 	    echo
             echo Migrated down successfully
