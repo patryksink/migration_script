@@ -52,6 +52,10 @@ echo "PATH=\$PATH:\$HOME/scripts" ~/.bashrc
 ```sh
 echo "PATH=\$PATH:\$HOME/scripts" ~/.zshrc
 ```
+## Change script variables
+Depending on the project doctrine command and migration location may differ so change variables acordingly
+- `COMMAND` => provide your own command if project requires other Doctrine syntax
+- `MIGRATION_PATH` => describes path to the migration folder from current directory
 # Usage
 ```sh
 migrate_down git_branch
