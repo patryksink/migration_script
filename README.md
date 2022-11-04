@@ -1,3 +1,5 @@
+# Purpose
+This script main purpose is to migrate down database to the latest migration of the target branch
 # Setup
 ## Create scripts directory 
 (if you have one skip this step)
@@ -46,11 +48,11 @@ Depending on the shell type used add path to scripts folder
 1. Copy `PATH=$PATH:$HOME/scripts` to config
 - bash -> `~/.bashrc`
 ```sh
-echo "PATH=\$PATH:\$HOME/scripts" ~/.bashrc
+echo "PATH=\$PATH:\$HOME/scripts" >> ~/.bashrc
 ```
 - zsh -> `~/.zshrc`
 ```sh
-echo "PATH=\$PATH:\$HOME/scripts" ~/.zshrc
+echo "PATH=\$PATH:\$HOME/scripts" >> ~/.zshrc
 ```
 ## Change script variables
 Depending on the project doctrine command and migration location may differ so change variables acordingly
